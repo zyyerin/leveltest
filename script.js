@@ -1,6 +1,8 @@
 var MIC;
 var ARNOLD_FFT;
 var BGIMG;
+var ARNOLD_HEAD;
+var ARNOLD_TYPE;
 var TRIGGER;
 
 var RECORDS = [0, 0, 0, 0];
@@ -8,7 +10,9 @@ var RANGE;
 
 
 function preload() {
-    BGIMG = loadImage("assets/bg_cover.png");
+    BGIMG = loadImage("assets/bg.png");
+    ARNOLD_HEAD = loadImage("assets/arnoldHead.png");
+    ARNOLD_TYPE = loadImage("assets/type.png");
 }
 
 function setup() {
@@ -29,12 +33,12 @@ function setup() {
 }
 
 function normalTest() {
-        background(255);
+    background(255);
     let blockW = 25;
     
     // sensitivity adjustment
     let vol = MIC.getLevel();
-    let volScaler = map(vol, 0, 1, 1, 2);
+    let volScaler = map(vol, 0, 0.2, 1, 2);
     let spectrum = ARNOLD_FFT.analyze();
     
     
@@ -62,7 +66,6 @@ function normalTest() {
             RECORDS[i] = currentRecords[i];
         }
     }
-    console.log(RECORDS);
     
     for (let i = 0; i < RECORDS.length; i += 1) {
         rect(blockW * i, 0, blockW, -RECORDS[i]);
@@ -90,36 +93,45 @@ function normalTest() {
     }());
     
     // time control by changing the number
-
-    
-    rect(width/2 - 50, -RANGE, 100, 3);
     
     pop();
     // end of the visualizer
+    
+    //    tint(255,100);
+    image(BGIMG, width/2, height/2);
+    image(ARNOLD_HEAD, width/2, 160);
 }
 
 function loud() {
-    for (let i = 0; i < 600; i += 1) {
-        fill(255, 0, 0);
-        push();
-        translate(width/2, 200);
-        rotate(radians(random(-10, 10)));
-        ellipse(0, 0, 150*random(-1, 1), 70*random(2));
-        pop();
-    }
+    fill(255, 100, 0);
+    rect(width/3, 0, 400, height);
+    image(BGIMG, width/2, height/2);
+    push();
+    translate(width/2, 160);
+    rotate(radians(random(-10, 10)));
+    image(ARNOLD_HEAD, 0, 0);
+    
+    translate(0, -50);
+    rotate(radians(random(-10, 10)));
+    image(ARNOLD_TYPE, 0, 0, random(200, 450), random(45, 150));
+    
+    pop();
 }
 
 function draw() {
     if (TRIGGER) {
-        alert("!");
-        TRIGGER = false;
+        loud();
+        if (mouseIsPressed) {
+            TRIGGER = false;
+            RECORDS = [0, 0, 0, 0];
+
+        }
     } else {
         normalTest();
     }
-//    tint(255,100);
-    image(BGIMG, width/2, height/2);
-    
-    loud();
+
+
+//    loud();
 }
 
 
