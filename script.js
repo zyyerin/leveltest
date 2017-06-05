@@ -1,91 +1,127 @@
 var MIC;
+var ARNOLD_FFT;
+var BGIMG;
+var TRIGGER;
 
-var RECORD;
+var RECORDS = [0, 0, 0, 0];
 var RANGE;
 
-var BELL_FILL;
 
+function preload() {
+    BGIMG = loadImage("assets/bg_cover.png");
+}
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    frameRate(24);
     background(255);
     MIC = new p5.AudioIn();
     MIC.start();
-    
+    ARNOLD_FFT = new p5.FFT(0.9, 16);
+    ARNOLD_FFT.setInput(MIC);
+
     RECORD = 0;
-    RANGE = 400;
+    RANGE = 325;
     BELL_FILL = 0;
+    noStroke();
+    
+    imageMode(CENTER);
 }
 
-function draw() {
-    let nob = 20;
-    let gap = 5;
-    let unitH = (RANGE+gap)/nob;
-    let blockW = 50;
-    let blockH = unitH - gap;
+function normalTest() {
+        background(255);
+    let blockW = 25;
     
     // sensitivity adjustment
     let vol = MIC.getLevel();
-    let currentLevel = Math.floor(map(vol, 0, 0.8, 0, 10));
+    let volScaler = map(vol, 0, 1, 1, 2);
+    let spectrum = ARNOLD_FFT.analyze();
     
+    
+    // records
+    let currentRecords = [];
+    for (let i = 0; i < spectrum.length; i += 4) {
+        let h = map(spectrum[i], 0, 255, 0, RANGE*0.5);
+        currentRecords.push(h * volScaler);
+    }
+
     // background setting
-    background(240);
-    noStroke();
-    
-    
-    
     push();
-    translate(0, 150);
+    translate(width/2 - 61, height - 90);
+    
+//    //range tester
+//    fill(255,0,255);
+//    rect(0,0,10,-RANGE);
+    
     // VISUALIZOR starts here
     
-    // level container
-    fill(255);
-    for (let i = 0; i<nob; i += 1) {
-        rect(width/2 - blockW/2, RANGE + gap*2 - i*unitH, blockW, blockH);
+    // record session
+    fill(255, 200, 0);
+    for(let i = 0; i < currentRecords.length; i += 1) {
+        if(currentRecords[i] > RECORDS[i]){
+            RECORDS[i] = currentRecords[i];
+        }
+    }
+    console.log(RECORDS);
+    
+    for (let i = 0; i < RECORDS.length; i += 1) {
+        rect(blockW * i, 0, blockW, -RECORDS[i]);
     }
     
-    // Draw a rectangle with height based on volume
-    if (RECORD < currentLevel) {
-        RECORD = currentLevel;
+    // spectrum
+    
+    fill(255, 100, 0);
+    for (let i = 0; i < spectrum.length; i += 4) {
+        let x = map(i, 0, spectrum.length, 0, blockW * 4);
+        let h = map(spectrum[i], 0, 255, 0, RANGE*0.5);
+        rect(x, 0, blockW, -h * volScaler);
     }
-    fill(255, 255, 0);
-    
-    for (let i = 0; i<RECORD; i += 1) {
-        rect(width/2 - blockW/2, RANGE + gap*2 - i*unitH, blockW, blockH);
-    }
-    
-    
-    // visualize live volume
 
-
-    fill(255, 170, 0);
-    for (let i = 0; i<currentLevel; i += 1) {
-        rect(width/2 - blockW/2, RANGE + gap*2 - i*unitH, blockW, blockH);
-    }    
     
+    // end trigger
     
-    // bell
-    
-    fill(BELL_FILL);
+    TRIGGER = (function(){
+        for(let i = 0; i < currentRecords.length; i += 1) {
+        if (currentRecords[i] < RANGE) {
+            return false;
+        }
+       return true;
+    }
+    }());
     
     // time control by changing the number
-    if (currentLevel >= nob) {
-        BELL_FILL += 30;
-    } else if (currentLevel > 0) {
-        BELL_FILL -= 5;
-    }
-    rect(width/2 - 50, unitH, 100, 3);
+
     
-    // end of the visualizer
+    rect(width/2 - 50, -RANGE, 100, 3);
+    
     pop();
-    
-    drawGround();
+    // end of the visualizer
 }
 
-function drawGround(){
-    fill(0, 170, 255);
-    rect(0, height - 100, width, 100);
+function loud() {
+    for (let i = 0; i < 600; i += 1) {
+        fill(255, 0, 0);
+        push();
+        translate(width/2, 200);
+        rotate(radians(random(-10, 10)));
+        ellipse(0, 0, 150*random(-1, 1), 70*random(2));
+        pop();
+    }
 }
+
+function draw() {
+    if (TRIGGER) {
+        alert("!");
+        TRIGGER = false;
+    } else {
+        normalTest();
+    }
+//    tint(255,100);
+    image(BGIMG, width/2, height/2);
+    
+    loud();
+}
+
 
 function windowResized() {
      resizeCanvas(windowWidth, windowHeight);
