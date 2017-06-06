@@ -42,7 +42,7 @@ function normalTest() {
 
     // sensitivity adjustment
     let vol = MIC.getLevel();
-    let volScaler = map(vol, 0, 0.6, 1, 2);
+    let volScaler = map(vol, 0, 0.4, 1, 2);
     let spectrum = ARNOLD_FFT.analyze();
 
 
