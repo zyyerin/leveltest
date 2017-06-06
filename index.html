@@ -9,7 +9,84 @@
     <script language="javascript" type="text/javascript" src="script.js"></script>
 
 
-    <style> body {padding: 0; margin: 0;} </style>
+    <style> body {padding: 0; margin: 0;}
+        
+    input[type=range] {
+  -webkit-appearance: none;
+  width: 100px;
+  margin: 13.7px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100px;
+  height: 4.6px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+  background: #3071ff;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+  border: 0px solid #fff200;
+  height: 20px;
+  width: 7px;
+  background: #ffaa00;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -8px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #3a78ff;
+}
+input[type=range]::-moz-range-track {
+  width: 100px;
+  height: 4.6px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+  background: #3071ff;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+  border: 0px solid #fff200;
+  height: 32px;
+  width: 10px;
+  border-radius: 0px;
+  background: #ffaa00;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100px;
+  height: 4.6px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #266aff;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+}
+input[type=range]::-ms-fill-upper {
+  background: #3071ff;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071ff;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #3a78ff;
+}
+        
+</style>
 </head>
 
 <body>

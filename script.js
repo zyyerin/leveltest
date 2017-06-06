@@ -8,7 +8,8 @@ var TRIGGER;
 var RECORDS = [0, 0, 0, 0];
 var RANGE;
 
-// var SLIDER;
+var SLIDER;
+var maxv;
 
 function preload() {
     BGIMG = loadImage("assets/bg.png");
@@ -32,8 +33,8 @@ function setup() {
 
     imageMode(CENTER);
 
-    // SLIDER = createSlider(0, 100, 50);
-    // SLIDER.position(50, 50);
+     SLIDER = createSlider(0, 110, 55);
+     SLIDER.position(10, 5);
 }
 
 function normalTest() {
@@ -42,7 +43,11 @@ function normalTest() {
 
     // sensitivity adjustment
     let vol = MIC.getLevel();
-    let volScaler = map(vol, 0, 0.4, 1, 2);
+    
+    maxv = SLIDER.value()/110;
+    console.log(maxv);
+
+    let volScaler = map(vol, 0, maxv, 1, 2);
     let spectrum = ARNOLD_FFT.analyze();
 
 
